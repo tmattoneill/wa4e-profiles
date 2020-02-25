@@ -1,11 +1,11 @@
 <?php
 	require_once("inc/config.php");
 	
-	if (! isset($_SESSION["user_id"])) {  // Not logged in
+	if (! isset($_SESSION["user_id"])) {   // Not logged in
 		die(ERR_NO_ACCESS);
 	}
 
-	if ( isset($_POST["cancel"])) {  // User has clicked Cancel on form
+	if ( isset($_POST["cancel"])) {        // User has clicked Cancel on form
 		header("Location: index.php");
 		exit;
 	}
@@ -34,7 +34,6 @@
         $he = htmlentities($row['headline']);
         $su = htmlentities($row['summary']);
         $ui = $row['user_id'];
-        // $profile_id = $row['profile_id'];
 
         if ( $ui !== $_SESSION["user_id"]) {
         	$_SESSION['error'] = 'You do no have permission to edit this record.';
@@ -54,15 +53,11 @@
 			}
 		}
 
-		if (! strrpos($_POST["email"], "@") ) { // Check for @ in password
+		if (! strrpos($_POST["email"], "@") ) { // Check for @ in email
 			$_SESSION["error"] = ERR_EMAIL;
 			header("Location: edit.php");
 			exit;
-		} /*else if ( exists_in_db($pdo, "email", "Profile", $_POST["email"])) {
-				$_SESSION["error"] = ERR_DUPE_EMAIL;
-				header("Location: edit.php");
-				exit;
-		} */
+		} 
 
 		$stmt = $pdo->prepare('UPDATE Profile 
 							   SET  first_name = :fn, 

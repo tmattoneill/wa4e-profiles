@@ -1,4 +1,10 @@
 <?php
+    /*  Helper functions for the WA4E set of projects. Contents:
+     *  exists_in_db: checks to see if a value exists in the database
+     *  profile_table: generates a user table
+     *  get_all_profiles: returns a join table of user IDs and Profile IDs
+     */
+
 	function exists_in_db($pdo, $field, $table, $val) {
 		// returns true if a given value exists in a database.
 		// takes a PDO connection, a string of a field name and a string of a table
@@ -54,4 +60,44 @@
 	    return $pdo->query($sql);
 	    
 	}
+	
+	function get_user () {
+	    global $pdo;
+	    
+	    $stmt = $pdo->prepare("SELECT user_id, name, email
+						   FROM users
+						   WHERE email = :em");
+	    
+	    $stmt->execute(array(':em' => $_POST['email']));
+	    
+	    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+	    
+	    return $row;
+	    
+	}
+	
+	function check_password() {
+	    
+	    // Note that the salt here is fixed as a variable (set in config.php).
+	    // This function assumes that isset has been checked for password and
+	    // a valid password structure has been entered.
+	    global $salt, $pdo;
+	    
+	    $check = hash('md5', $salt.$_POST['pass']);
+	    
+	    $stmt = $pdo->prepare("SELECT COUNT(email) as found
+						       FROM users
+						       WHERE email = :em AND password = :pw");
+	    
+	    $stmt->execute(array(
+	        ':em' => $_POST['email'],
+	        ':pw' => $check));
+	    
+	    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+	    $password_ok = $row["found"];
+	    
+	    return $password_ok;
+	    
+	}
+	
 ?>

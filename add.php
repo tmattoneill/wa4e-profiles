@@ -10,7 +10,7 @@
 		exit;
 	}
 
-	if ( isset($_POST["add"]) ) {  // Coming from form
+	if ( isset($_POST["add"]) ) {          // Coming from form
 
 		foreach ($_POST as $form_value) {  // Check all fields for empty strings
 		
@@ -21,23 +21,11 @@
 			}
 		}
 
-		if (! strrpos($_POST["email"], "@") ) { // Check for @ in password
+		if (! strrpos($_POST["email"], "@") ) { // Check for @ in email address
 			$_SESSION["error"] = ERR_EMAIL;
 			header("Location: add.php");
 			exit;
-		} /*else {
-
-			$sql = "SELECT email from Profile where email = ?";
-			$stmt = $pdo->prepare($sql);
-			$stmt->bindValue(1, $_POST["email"]);
-			$stmt->execute();
-
-			if ($stmt->rowCount() ) {
-				$_SESSION["error"] = "Dupe Emails found: " . $_POST['email'];
-				header("Location: add.php");
-				exit;
-			}
-		} */
+		}
 
 		$stmt = $pdo->prepare('INSERT INTO Profile (user_id, first_name, last_name, email, headline, summary)
         					   VALUES ( :uid, :fn, :ln, :em, :he, :su)');

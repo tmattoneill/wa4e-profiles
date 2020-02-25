@@ -36,61 +36,7 @@
 
 /* PHP Helper functions */
 
-function get_user () {
-	global $pdo;
 
-	$stmt = $pdo->prepare("SELECT user_id, name, email 
-						   FROM users 
-						   WHERE email = :em");
-
-	$stmt->execute(array(':em' => $_POST['email']));
-
-	$row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-	return $row;
-
-}
-
-function check_password() {
-	
-	// Note that the salt here is fixed as a variable (set in config.php). 
-	// This function assumes that isset has been checked for password and
-	// a valid password structure has been entered.
-	global $salt, $pdo;
-	
-	$check = hash('md5', $salt.$_POST['pass']);
-	error_log("Checking: $check");
-
-	$stmt = $pdo->prepare("SELECT COUNT(email) as found
-						   FROM users 
-						   WHERE email = :em AND password = :pw");
-
-	$stmt->execute(array( 
-		':em' => $_POST['email'], 
-		':pw' => $check));
-
-	$row = $stmt->fetch(PDO::FETCH_ASSOC);
-	$password_ok = $row["found"];
-
-	return $password_ok;
-
-}
-
-function check_pwd_2() {
-    global $salt, $pdo;
-    
-	$check = hash('md5', $salt.$_POST['pass']);
-	
-	$stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
-	$stmt->execute([$_POST['email']]);
-	$user = $stmt->fetch();
-
-	if ($user && ( $check === $user['pass'])) {
-	    return true;
-	} else {
-	    return false;
-	}
-}
 
 ?>
 
