@@ -1,6 +1,6 @@
 <?php
 	session_start();
-
+	
 	require_once("conn.php");
 	require_once("func.php");
 
@@ -15,5 +15,6 @@
 
 	// vars needed throughout the app
 	$salt = 'XyZzy12*_';
+	$logged_in = isset($_SESSION["user_id"]);
 	
 ?>
